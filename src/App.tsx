@@ -10,7 +10,7 @@ import {Meta} from "./pages/config/Meta";
 import {Moderation} from "./pages/config/Moderation";
 import {Sidebar} from "./components/SideBar";
 import {useFetchUser} from "./utils/hooks/userFetchUser";
-import {Callback} from "./utils/hooks/Callback";
+import {CallbackPage} from "./pages/onboarding/Callback";
 
 //Provider will be used to provide the context to the children
 function App() {
@@ -51,7 +51,7 @@ function App() {
             <Route path="/dashboard/messages" element={<SetMessages/>}/>
             <Route path="/dashboard/meta" element={<Meta/>}/>
             <Route path="/dashboard/moderation" element={<Moderation/>}/>
-            <Route path="/api/auth/callback" element={<Callback/>}/>
+            <Route path="/onboarding/callback" element={<CallbackPage/>}/>
         </Routes>
     </GuildContext.Provider>
 }
