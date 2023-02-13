@@ -1,13 +1,10 @@
 import {useEffect} from 'react';
-import {FaDiscord, FaQuestionCircle} from "react-icons/fa";
-import {HomeStyle, MainButton, MainFooter} from "../../utils/styles";
+import {HomeStyle, MainFooter} from "../../utils/styles";
 import configData from "../../security/config.json";
 import {
     redirectToContact,
-    redirectToDiscord,
     redirectToLicense,
     redirectToPrivacyPolicy,
-    redirectToSupportServer,
     redirectToTeam,
     redirectToTermsOfService
 } from "../../utils/LoginPageUtils";
@@ -29,7 +26,12 @@ export const CallbackPage = () => {
                     return;
                 }
 
-                alert("got session response: " + body);
+                    alert("got session response: " + body);
+
+                window.location.href = "/menu";
+            })
+            .catch(error => {
+                alert("Error while getting response!" + error);
             });
     }, []);
 
