@@ -18,7 +18,7 @@ function App() {
 
     //state variable and function to update the state
     const updateGuildId = (guildId: string) => setGuildId(guildId)
-    useFetchUser();
+    //useFetchUser();
     return <GuildContext.Provider value={{guildId, updateGuildId}}>
         {/*{true ? (<>
             <Routes>
