@@ -9,8 +9,19 @@ import {
     redirectToTermsOfService
 } from "../../utils/LoginPageUtils";
 
+let amountOfTimeTried : number = 0;
+
 export const CallbackPage = () => {
+    if (amountOfTimeTried === 1) {
+        alert("Tried to get the session once, but failed. Redirecting to login page.");
+        window.location.href = "/";
+    } else {
+        amountOfTimeTried++;
+    }
+
     useEffect(() => {
+
+
         //get the code added that has been added as an additional querystring parameter
         const code = new URLSearchParams(window.location.search).get('code');
         const state = new URLSearchParams(window.location.search).get('state');
@@ -18,20 +29,23 @@ export const CallbackPage = () => {
         fetch(configData.auth_api_url + `/auth/exchange_code?code=${code}&state=${state}`)
             .then(async response => {
                 // TODO: error handling
-                const body = await response.json();
+                const body = await response.text();
 
                 if (!response.ok) {
-                    alert("Error while getting response!");
-                    console.error(body);
+                    alert("Error while getting response!" + body)
                     return;
                 }
 
-                    alert("got session response: " + body);
-
+                alert("got session response: " + body);
                 window.location.href = "/menu";
             })
             .catch(error => {
-                alert("Error while getting response!" + error);
+                //make sure error makes sense
+                let errorMessage = error.toString();
+                if (errorMessage.includes("TypeError: Failed to fetch")) {
+                    errorMessage = "Failed to fetch. Please check your internet connection.";
+                }
+                alert("Error while getting session: " + errorMessage);
             });
     }, []);
 
