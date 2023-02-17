@@ -36,7 +36,6 @@ export const CallbackPage = () => {
                     return;
                 }
 
-                alert("got session response: " + body);
                 window.location.href = "/menu";
             })
             .catch(error => {
