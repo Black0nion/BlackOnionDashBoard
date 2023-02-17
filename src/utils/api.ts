@@ -1,13 +1,7 @@
-import axis, {AxiosRequestConfig} from 'axios';
-import {User} from "./types";
 import configData from "../security/config.json";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
-
-const CONFIG: AxiosRequestConfig = {withCredentials: true}
-
-export const getAuthStatus = () => axis.get<User>(getAuthLogin + 'status', CONFIG)
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
