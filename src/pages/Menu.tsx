@@ -13,14 +13,26 @@ export const Menu = () => {
         updateGuildId(guildId)
         navigate(`/dashboard`)
     }
+
+    let guilds = retrieveUserGuilds()
+
+    if (guilds.size() === 0) {
+        return <Page>
+            <Container>
+                <h1>Join a Server</h1>
+                <p>You need to join a server to use this bot.</p>
+            </Container>
+        </Page>
+    }
+
     return <Page>
         <Container>
             <h1>Select a Server</h1>
             <div>
                 {
-                 retrieveUserGuilds().map((guild) => (
+                    guilds.map(guild => (
                         <div onClick={() => {
-                            handleClick(guild.id.toString())
+                            handleClick(guild.id)
                         }}>
                             <GuildMenuItem guild={guild}/>
                         </div>

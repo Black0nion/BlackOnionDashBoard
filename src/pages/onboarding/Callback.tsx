@@ -44,14 +44,11 @@ export const CallbackPage = () => {
                 return;
             }
 
-            if (json.access_token === undefined || json.access_token === null) {
-                alert("Failed to get the session. Redirecting to login page.");
-                window.location.href = "/";
-                return;
-            }
+            //raw expires_in is 604800 for example, which is 7 days
+            let formatExperiesIn = new Date();
+            formatExperiesIn.setTime(formatExperiesIn.getTime() + (json.expires_in * 1000));
 
-
-            setCookie("token", json.access_token, {path: "/", expires: json.expires_in});
+            setCookie("token", json.access_token, {path: "/", expires: formatExperiesIn});
 
             window.location.href = "/menu";
         }).catch(error => {

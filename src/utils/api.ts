@@ -4,6 +4,7 @@ import {User} from "../entites/User";
 import {List} from "./List";
 import {Guild} from "../entites/Guild";
 import {getCookie} from "./Cookies";
+import {GuildImpl} from "../entites/impl/GuildImpl";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
@@ -39,15 +40,23 @@ export const retrieveUserInfo = () : User | null => {
     return user
 }
 
-export const retrieveUserGuilds = () : List<Guild>  => {
+function handleGuilds(json: any) : List<Guild> {
     let guilds : List<Guild> = new List<Guild>()
-    alert("retrieveUserGuilds")
+
+    json.forEach((guild : any) => {
+        guilds.add(new GuildImpl(guild.id, guild))
+    })
+
+    return guilds
+}
+
+//TODO: for some reason is empty
+export const retrieveUserGuilds = () : List<Guild>  => {
 
     if (getCookie("token") === null) {
         alert("token is null")
         throw new Error("token is null")
     }
-
 
     //Get
     fetch(discordBaseUrl + "/users/@me/guilds" , {
@@ -60,15 +69,20 @@ export const retrieveUserGuilds = () : List<Guild>  => {
     }).then(response => {
         if (response.ok) {
             response.json().then(json => {
-                json.forEach((guild : any) => {
-                    guilds.add(guild)
-                })
+                return handleGuilds(json)
             })
         } else {
-            alert("Error: " + response.status + " " + response.json())
+            alert("error")
+            return new List<Guild>()
         }
     }).catch(error => {
-        alert(error)
+        alert("error")
+        return new List<Guild>()
     })
-    return guilds
+
+    return new List<Guild>()
+}
+
+function parseJson(json : any) : any {
+    return JSON.stringify(json)
 }

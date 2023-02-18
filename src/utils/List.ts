@@ -13,11 +13,19 @@ export class List<T> {
         this.items.push(value);
     }
 
+    addAll(values: List<T>): void {
+        values.forEach(value => this.add(value));
+    }
+
     get(index: number): T {
         return this.items[index];
     }
 
     map<U>(callback: (value: T, index: number, array: T[]) => U): U[] {
         return this.items.map(callback);
+    }
+
+    private forEach(param: (value: any) => void) {
+        this.items.forEach(param);
     }
 }
