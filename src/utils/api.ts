@@ -5,6 +5,15 @@ import {User} from "../entites/User";
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
 let discordBaseUrl = "https://discord.com/api/v10/"
+let token : string | null = null
+
+fetch(configData.auth_api_url + "/token").then(response => {
+    if (response.ok) {
+        response.json().then(json => {
+            token = json.access_token
+        })
+    }
+})
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
@@ -15,19 +24,22 @@ export const getAuthLogin = () => {
 
 export const retrieveUserInfo = () : User | null => {
     let user : User | null = null
-    fetch(discordBaseUrl + "/users/@me")
-        .then(response => {
-            if (response.ok) {
-                response.json().then(json => {
-                    user = new UserImpl(json.id, json)
-                })
-            } else {
-                throw new Error("Response was not ok")
-            }
-        })
-        .catch(error => {
-            console.error(error)
-            user = null
-        })
+
+    //Get
+    fetch(discordBaseUrl + "/users/@me" , {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            "Authorization" : "Bearer " + token,
+            "accept-encoding" : "json"
+        }
+    }).then(response => {
+        if (response.ok) {
+            response.json().then(json => {
+                user = new UserImpl(json.id, json)
+            })
+        }
+    })
+
     return user
 }
