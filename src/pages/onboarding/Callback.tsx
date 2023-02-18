@@ -9,7 +9,7 @@ import {
     redirectToTermsOfService
 } from "../../utils/LoginPageUtils";
 
-let amountOfTimeTried : number = 0;
+let amountOfTimeTried: number = 0;
 
 export const CallbackPage = () => {
     if (amountOfTimeTried === 1) {
@@ -20,32 +20,32 @@ export const CallbackPage = () => {
     }
 
     useEffect(() => {
-
-
-        //get the code added that has been added as an additional querystring parameter
         const code = new URLSearchParams(window.location.search).get('code');
-        const state = new URLSearchParams(window.location.search).get('state');
 
-        fetch(configData.auth_api_url + `/auth/exchange_code?code=${code}&state=${state}`)
-            .then(async response => {
-                // TODO: error handling
-                const body = await response.text();
+        // change of approach: we get the token and save it in the session storage, then we redirect to the menu page
+        fetch("https://discord.com/api/v10" + "/oauth2/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                client_id: configData.client_id,
+                client_secret: configData.client_secret,
+                grant_type: "authorization_code",
+                code: code as string,
+                redirect_uri: "http://localhost:3000/onboarding/callback",
+            }).toString()
+        }).then(async response => {
+            let json = await response.json();
+            alert("json: " + JSON.stringify(json));
+            sessionStorage.setItem("token", json.access_token);
+            sessionStorage.setItem("refresh_token", json.refresh_token);
+            sessionStorage.setItem("expires_in", json.expires_in);
+            sessionStorage.setItem("scope", json.scope);
+            sessionStorage.setItem("token_type", json.token_type);
 
-                if (!response.ok) {
-                    alert("Error while getting response!" + body)
-                    return;
-                }
-
-                window.location.href = "/menu";
-            })
-            .catch(error => {
-                //make sure error makes sense
-                let errorMessage = error.toString();
-                if (errorMessage.includes("TypeError: Failed to fetch")) {
-                    errorMessage = "Failed to fetch. Please check your internet connection.";
-                }
-                alert("Error while getting session: " + errorMessage);
-            });
+            window.location.href = "/menu";
+        })
     }, []);
 
     return (
