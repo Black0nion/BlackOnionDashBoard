@@ -5,15 +5,6 @@ import {User} from "../entites/User";
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
 let discordBaseUrl = "https://discord.com/api/v10/"
-let token : string | null = null
-
-fetch(configData.auth_api_url + "/token").then(response => {
-    if (response.ok) {
-        response.json().then(json => {
-            token = json.access_token
-        })
-    }
-})
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
@@ -30,7 +21,7 @@ export const retrieveUserInfo = () : User | null => {
         method: "GET",
         headers: {
             "Content-Type" : "application/json",
-            "Authorization" : "Bearer " + token,
+            "Authorization" : localStorage.getItem("token_type") + " " + localStorage.getItem("token"),
             "accept-encoding" : "json"
         }
     }).then(response => {
