@@ -4,6 +4,7 @@ import {User} from "../entites/User";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
+let discordBaseUrl = "https://discord.com/api/v10/"
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
@@ -14,7 +15,7 @@ export const getAuthLogin = () => {
 
 export const retrieveUserInfo = () : User | null => {
     let user : User | null = null
-    fetch(configData.auth_api_url + "/users/@me")
+    fetch(discordBaseUrl + "/users/@me")
         .then(response => {
             if (response.ok) {
                 response.json().then(json => {
