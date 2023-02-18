@@ -2,7 +2,7 @@ import {Button, Container, CustomSelect, Flex, Page, PageTitle} from "../../util
 
 export const Moderation = () => {
     return <Page>
-        <PageTitle>Moderation COnfig</PageTitle>
+        <PageTitle>Moderation Config</PageTitle>
 
         <Container>
             <h1>Enable/Disable Anti-Spoiler</h1>

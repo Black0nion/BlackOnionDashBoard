@@ -37,7 +37,6 @@ export const CallbackPage = () => {
             }).toString()
         }).then(async response => {
             let json = await response.json();
-            alert("json: " + JSON.stringify(json));
             sessionStorage.setItem("token", json.access_token);
             sessionStorage.setItem("refresh_token", json.refresh_token);
             sessionStorage.setItem("expires_in", json.expires_in);

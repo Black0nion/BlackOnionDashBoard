@@ -9,6 +9,7 @@ export class UserImpl implements User {
     isBot: boolean | undefined;
     isSystem: boolean | undefined;
     isMfaEnabled: boolean | undefined;
+    json : string;
 
     constructor(id : string, json : any) {
         this.id = id;
@@ -19,5 +20,6 @@ export class UserImpl implements User {
         this.isBot = json.bot;
         this.isSystem = json.system;
         this.isMfaEnabled = json.mfa_enabled;
+        this.json = json;
     }
 }

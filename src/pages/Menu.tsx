@@ -11,7 +11,7 @@ export const Menu = () => {
     const {updateGuildId} = useContext(GuildContext)
     const handleClick = (guildId: string) => {
         updateGuildId(guildId)
-        navigate(`/dashboard/categories`)
+        navigate(`/dashboard`)
     }
     return <Page>
         <Container>

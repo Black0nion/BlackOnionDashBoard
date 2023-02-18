@@ -42,4 +42,11 @@ export interface User extends Snowflake{
      * @return the mfa flag of this user
      */
     isMfaEnabled: boolean | undefined;
+
+    /**
+     * The json object of this user.
+     *
+     * @return the json object of this user
+     */
+    json: string;
 }
