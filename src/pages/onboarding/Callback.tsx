@@ -8,6 +8,7 @@ import {
     redirectToTeam,
     redirectToTermsOfService
 } from "../../utils/LoginPageUtils";
+import {setCookie} from "../../utils/Cookies";
 
 let amountOfTimeTried: number = 0;
 
@@ -49,11 +50,8 @@ export const CallbackPage = () => {
                 return;
             }
 
-            sessionStorage.setItem("token", json.access_token);
-            sessionStorage.setItem("refresh_token", json.refresh_token);
-            sessionStorage.setItem("expires_in", json.expires_in);
-            sessionStorage.setItem("scope", json.scope);
-            sessionStorage.setItem("token_type", json.token_type);
+
+            setCookie("token", json.access_token, {path: "/", expires: json.expires_in});
 
             window.location.href = "/menu";
         }).catch(error => {

@@ -3,10 +3,12 @@ import {UserImpl} from "../entites/impl/UserImpl";
 import {User} from "../entites/User";
 import {List} from "./List";
 import {Guild} from "../entites/Guild";
+import {getCookie} from "./Cookies";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
 let discordBaseUrl = "https://discord.com/api/v10/"
+
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
@@ -41,17 +43,18 @@ export const retrieveUserGuilds = () : List<Guild>  => {
     let guilds : List<Guild> = new List<Guild>()
     alert("retrieveUserGuilds")
 
-    if (localStorage.getItem("token") === null) {
+    if (getCookie("token") === null) {
         alert("token is null")
         throw new Error("token is null")
     }
+
 
     //Get
     fetch(discordBaseUrl + "/users/@me/guilds" , {
         method: "GET",
         headers: {
             "Content-Type" : "application/json",
-            "Authorization" : "Bearer " + localStorage.getItem("token"),
+            "Authorization" : "Bearer " + getCookie("token"),
             "accept-encoding" : "json"
         }
     }).then(response => {
@@ -62,7 +65,7 @@ export const retrieveUserGuilds = () : List<Guild>  => {
                 })
             })
         } else {
-            alert("Error: " + response.status)
+            alert("Error: " + response.status + " " + response.json())
         }
     }).catch(error => {
         alert(error)
