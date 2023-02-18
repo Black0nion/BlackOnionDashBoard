@@ -1,6 +1,8 @@
 import configData from "../security/config.json";
 import {UserImpl} from "../entites/impl/UserImpl";
 import {User} from "../entites/User";
+import {List} from "./List";
+import {Guild} from "../entites/Guild";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
@@ -33,4 +35,37 @@ export const retrieveUserInfo = () : User | null => {
     })
 
     return user
+}
+
+export const retrieveUserGuilds = () : List<Guild>  => {
+    let guilds : List<Guild> = new List<Guild>()
+    alert("retrieveUserGuilds")
+
+    if (localStorage.getItem("token") === null) {
+        alert("token is null")
+        throw new Error("token is null")
+    }
+
+    //Get
+    fetch(discordBaseUrl + "/users/@me/guilds" , {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            "Authorization" : "Bearer " + localStorage.getItem("token"),
+            "accept-encoding" : "json"
+        }
+    }).then(response => {
+        if (response.ok) {
+            response.json().then(json => {
+                json.forEach((guild : any) => {
+                    guilds.add(guild)
+                })
+            })
+        } else {
+            alert("Error: " + response.status)
+        }
+    }).catch(error => {
+        alert(error)
+    })
+    return guilds
 }

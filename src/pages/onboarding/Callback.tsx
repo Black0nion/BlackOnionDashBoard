@@ -37,6 +37,18 @@ export const CallbackPage = () => {
             }).toString()
         }).then(async response => {
             let json = await response.json();
+            if (response.status !== 200) {
+                alert("Failed to get the session. Redirecting to login page.");
+                window.location.href = "/";
+                return;
+            }
+
+            if (json.access_token === undefined || json.access_token === null) {
+                alert("Failed to get the session. Redirecting to login page.");
+                window.location.href = "/";
+                return;
+            }
+
             sessionStorage.setItem("token", json.access_token);
             sessionStorage.setItem("refresh_token", json.refresh_token);
             sessionStorage.setItem("expires_in", json.expires_in);
@@ -44,6 +56,10 @@ export const CallbackPage = () => {
             sessionStorage.setItem("token_type", json.token_type);
 
             window.location.href = "/menu";
+        }).catch(error => {
+            console.log(error);
+            alert("Failed to get the session. Redirecting to login page.");
+            window.location.href = "/";
         })
     }, []);
 

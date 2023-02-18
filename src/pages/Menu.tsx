@@ -1,9 +1,9 @@
-import {mockGuilds} from "../mocks/guild";
 import {useNavigate} from "react-router";
 import {useContext} from "react";
 import {GuildContext} from "../utils/context/GuildContext";
 import {GuildMenuItem} from "../components/GuildMenuItem";
 import {Container, Page} from "../utils/styles";
+import {retrieveUserGuilds} from "../utils/api";
 
 export const Menu = () => {
     const navigate = useNavigate()
@@ -18,8 +18,7 @@ export const Menu = () => {
             <h1>Select a Server</h1>
             <div>
                 {
-
-                    mockGuilds.map((guild) => (
+                 retrieveUserGuilds().map((guild) => (
                         <div onClick={() => {
                             handleClick(guild.id.toString())
                         }}>
