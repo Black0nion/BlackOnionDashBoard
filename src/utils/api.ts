@@ -10,7 +10,7 @@ import {throws} from "assert";
 
 let clientId = configData.client_id
 let redirectUrl = configData.redirect_url
-let discordBaseUrl = "https://discord.com/api/v10/"
+export let discordBaseUrl = "https://discord.com/api/v10/"
 
 export const getAuthLogin = () => {
     if (clientId === undefined || redirectUrl === undefined) {
@@ -63,7 +63,11 @@ const handleTheLoadingOfGuildJsons =  async (): Promise<any | null> => {
             throw new Error("error while loading guilds " + response.status)
         }
 
-        thisJson = json
+        if (json === null) {
+            thisJson = "null"
+        } else {
+            thisJson = json
+        }
     }).catch(error => {
         alert("error while loading guilds " + error.message)
         throw new Error("error while loading guilds" + error.message)
@@ -71,27 +75,44 @@ const handleTheLoadingOfGuildJsons =  async (): Promise<any | null> => {
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    return thisJson //this is null
+    return thisJson ?? null
 }
 
-export function handleGuilds() : List<Guild> {
-    let json : any = handleTheLoadingOfGuildJsons()
-    let guildList : List<Guild> = new List<Guild>()
+export async function handleGuilds(): Promise<List<Guild>> {
+    let json: any = handleTheLoadingOfGuildJsons()
+    let guildList: List<Guild> = new List<Guild>()
 
-    if (json === null) {
-        alert("json is null")
-        throw new Error("json is null")
-    }
+    //promise
+    while (json.then === undefined) {
+        json = await json
+    } //wait for the promise to resolve
 
-    try {
-        //get the perms and check if they can manage the server 0x0000000000000020 (1 << 5)
-        for (let i = 0; i < json.length; i++) {
-            if (json[i].permissions & 0x0000000000000020) {
-                guildList.add(new GuildImpl(json[i].id, json[i]))
+    if (json !== "null") {
+        try {
+            //get the perms and check if they can manage the server 0x0000000000000020 (1 << 5)
+            for (let i = 0; i < json.length; i++) {
+                if (json[i].permissions & 0x0000000000000020) {
+                    guildList.add(new GuildImpl(json[i].id, json[i]))
+                }
             }
-        }
 
+            return guildList
+        } catch (error) {
+            alert("error while handling guilds: " + error)
+            throw new Error("error while handling guilds: " + error)
+        }
+    } else {
         return guildList
+    }
+}
+
+export  function handleGuild(json: any): Guild | null {
+    try {
+            if (json.permissions & 0x0000000000000020) {
+                return new GuildImpl(json.id, json)
+            } else {
+                return null
+            }
     } catch (error) {
         alert("error while handling guilds: " + error)
         throw new Error("error while handling guilds: " + error)
