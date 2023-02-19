@@ -58,9 +58,8 @@ export const Menu = () => {
             })
         } else {
             setGuildState("loaded")
-            alert("Guilds are already loaded.")
         }
-    }, [])
+    }, [guildState, guilds, navigate])
 
 
     return (

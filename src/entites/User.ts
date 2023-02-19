@@ -1,6 +1,6 @@
 import {Snowflake} from "./Snowflake";
 
-export interface User extends Snowflake{
+export interface User extends Snowflake {
     /**
      * The username of this user.
      *

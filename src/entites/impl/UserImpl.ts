@@ -9,9 +9,9 @@ export class UserImpl implements User {
     isBot: boolean | undefined;
     isSystem: boolean | undefined;
     isMfaEnabled: boolean | undefined;
-    json : string;
+    json: string;
 
-    constructor(id : string, json : any) {
+    constructor(id: string, json: any) {
         this.id = id;
         this.idAsLong = Number(id);
         this.username = json.username;
