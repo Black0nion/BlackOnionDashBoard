@@ -4,11 +4,13 @@ import {Container, Page, TestTextButtonGroup, TextButton,} from "../utils/styles
 import {useNavigate} from "react-router";
 
 export const Dashboard = () => {
-    const {guildId} = useContext(GuildContext)
+    const {guild} = useContext(GuildContext);
     const navigate = useNavigate()
+
     const handleClick = (path: string) => {
         navigate(path)
     }
+
     return <Page>
         <Container>
             <div>

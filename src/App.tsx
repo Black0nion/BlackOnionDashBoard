@@ -9,14 +9,17 @@ import {Meta} from "./pages/config/Meta";
 import {Moderation} from "./pages/config/Moderation";
 import {CallbackPage} from "./pages/onboarding/Callback";
 import {getCookie} from "./utils/Cookies";
+import {Sidebar} from "./components/SideBar";
+import {AppBar} from "./components/AppBar";
+import {Guild} from "./entites/Guild";
 
 //Provider will be used to provide the context to the children
 function App() {
-    const [guildId, setGuildId] = useState("")
+    const [guild, setGuild] = useState<Guild>();
     //state variable and function to update the state
-    const updateGuildId = (guildId: string) => setGuildId(guildId)
+    const updateGuild = (guild: Guild) => setGuild(guild);
 
-    //if token exsists in cookies, redirect to dashboard
+    //if token exists in cookies, redirect to dashboard
     //if not, redirect to login page
 
     const token = getCookie("token")
@@ -27,7 +30,13 @@ function App() {
             <Route path="/onboarding/callback" element={<CallbackPage/>}/>
         </Routes>
     } else {
-        return <GuildContext.Provider value={{guildId, updateGuildId}}>
+        return <GuildContext.Provider value={{guild, updateGuild}}>
+            <Routes>
+                <Route path="/dashboard/*" element={<AppBar/>}/>
+            </Routes>
+            <Routes>
+                <Route path="/dashboard/*" element={<Sidebar/>}/>
+            </Routes>
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
                 <Route path="/menu" element={<Menu/>}/>

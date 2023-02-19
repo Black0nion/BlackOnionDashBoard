@@ -11,9 +11,10 @@ import {getCookie} from "../utils/Cookies";
 export const Menu = () => {
     const navigate = useNavigate()
     //context keeps track of the guildId
-    const {updateGuildId} = useContext(GuildContext)
-    const handleClick = (guildId: string) => {
-        updateGuildId(guildId)
+    const {updateGuild} = useContext(GuildContext)
+
+    const handleClick = (guild: Guild) => {
+        updateGuild(guild)
         navigate(`/dashboard`)
     }
 
@@ -56,8 +57,6 @@ export const Menu = () => {
                 alert("Failed to get the guilds. Redirecting to login page.");
                 navigate(`/`)
             })
-        } else {
-            setGuildState("loaded")
         }
     }, [guildState, guilds, navigate])
 
@@ -73,7 +72,7 @@ export const Menu = () => {
                     return <div>
                         {
                             <div onClick={() => {
-                                handleClick(guild.id.toString())
+                                handleClick(guild)
                             }}>
                                 <GuildMenuItem guild={guild}/>
                             </div>

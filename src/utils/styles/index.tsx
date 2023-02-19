@@ -164,8 +164,8 @@ export const Flex = styled.div<FlexProps>`
   flex-direction: ${(props) => props.flexDirection};
 
   ${(props) =>
-    props.flexDirection === 'column' &&
-    css`
+          props.flexDirection === 'column' &&
+          css`
             height: 100%;
           `}
 
@@ -198,24 +198,24 @@ export const Button = styled.button<ButtonProps>`
   cursor: pointer;
 
   ${({variant}) =>
-    variant === 'primary' &&
-    css`
+          variant === 'primary' &&
+          css`
             background-color: #006ed3;
           `}
   ${({variant}) =>
-    variant === 'secondary' &&
-    css`
+          variant === 'secondary' &&
+          css`
             background-color: #3d3d3d;
           `}
   &:hover {
     ${({variant}) =>
-    variant === 'primary' &&
-    css`
+            variant === 'primary' &&
+            css`
               background-color: #0057a3;
             `}
     ${({variant}) =>
-    variant === 'secondary' &&
-    css`
+            variant === 'secondary' &&
+            css`
               background-color: #2b2b2b;
             `}
 `;

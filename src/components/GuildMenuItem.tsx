@@ -9,15 +9,18 @@ type props = {
 }
 
 export const GuildMenuItem = ({guild}: props) => {
-
-    if (guild.icon === null) {
-        guild.icon = "https://cdn.discordapp.com/embed/avatars/0.png";
-    } else {
-        guild.icon = "https://cdn.discordapp.com/icons/" + guild.id + "/" + guild.icon + ".png";
-    }
+    guild.icon = getIcon(guild.id, guild.icon)
 
     return <GuildMenuStyle>
         <GuildIcon src={guild.icon} alt={guild.name} width={50} height={50}/>
         <p>{guild.name}</p>
     </GuildMenuStyle>
+}
+
+export function getIcon(id: string, icon: string) {
+    if (icon === null) {
+        return "https://cdn.discordapp.com/embed/avatars/0.png";
+    } else {
+        return "https://cdn.discordapp.com/icons/" + id + "/" + icon + ".png";
+    }
 }

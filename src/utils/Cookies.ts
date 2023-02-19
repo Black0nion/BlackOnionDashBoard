@@ -11,6 +11,10 @@ export function setCookie(name: string, value: string, options?: CookieSetOption
     }
 }
 
-export function getCookie(name: string) {
-    return cookies.get(name)
+export function getCookie(name: string): string | null {
+    if (cookies.get(name) === undefined || cookies.get(name) === null) {
+        return null
+    } else {
+        return cookies.get(name)
+    }
 }
