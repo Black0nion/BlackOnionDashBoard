@@ -32,8 +32,6 @@ export const Menu = () => {
                     "accept-encoding": "json"
                 }
             }).then(async response => {
-                alert("Please wait while we get you ready....")
-
                 if (response.status !== 200) {
                     alert("Failed to get the guilds. Redirecting to login page.");
                     navigate(`/`)
@@ -46,12 +44,10 @@ export const Menu = () => {
                 for (let i = 0; i < json.length; i++) {
                     let guild = handleGuild(json[i]);
                     if (guild !== null) {
-                        alert(guild.name)
                         independentList.add(guild);
                     }
                 }
 
-                alert(independentList.size())
                 await setGuilds(independentList);
 
                 setGuildState("loaded")
@@ -77,14 +73,11 @@ export const Menu = () => {
                 {guilds?.size() !== 0 && guilds?.map((guild: Guild) => {
                     return <div>
                         {
-
-                            guilds.map((guild) => (
-                                <div onClick={() => {
-                                    handleClick(guild.id.toString())
-                                }}>
-                                    <GuildMenuItem guild={guild}/>
-                                </div>
-                            ))
+                            <div onClick={() => {
+                                handleClick(guild.id.toString())
+                            }}>
+                                <GuildMenuItem guild={guild}/>
+                            </div>
                         }
                     </div>
                 })}
