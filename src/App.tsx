@@ -12,6 +12,7 @@ import {getCookie} from "./utils/Cookies";
 import {Sidebar} from "./components/SideBar";
 import {AppBar} from "./components/AppBar";
 import {Guild} from "./entites/Guild";
+import {BotInvitePage} from "./pages/BotInvitePage";
 
 //Provider will be used to provide the context to the children
 function App() {
@@ -24,7 +25,7 @@ function App() {
 
     const token = getCookie("token")
 
-    if (token === "") {
+    if (token === null) {
         return <Routes>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/onboarding/callback" element={<CallbackPage/>}/>
@@ -39,6 +40,7 @@ function App() {
             </Routes>
             <Routes>
                 <Route path="/" element={<LoginPage/>}/>
+                <Route path="/invite" element={<BotInvitePage/>}/>
                 <Route path="/menu" element={<Menu/>}/>
                 <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/dashboard/messages" element={<SetMessages/>}/>

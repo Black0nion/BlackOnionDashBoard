@@ -7,15 +7,43 @@ import {discordBaseUrl, handleGuild} from "../utils/api";
 import {List} from "../utils/List";
 import {Guild} from "../entites/Guild";
 import {getCookie} from "../utils/Cookies";
+import configData from "../security/config.json";
 
 export const Menu = () => {
     const navigate = useNavigate()
     //context keeps track of the guildId
     const {updateGuild} = useContext(GuildContext)
 
+    const [isBlackOnionInGuild, setIsBlackOnionInGuild] = useState(false)
+    const [retrieveBotState, setRetrieveBotState] = useState("not started")
+
     const handleClick = (guild: Guild) => {
         updateGuild(guild)
         navigate(`/dashboard`)
+    }
+
+    const getMembers = (guildId: string) => {
+        return fetch(discordBaseUrl + "/guilds/" + guildId + "/members", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getCookie("token"),
+                "accept-encoding": "json"
+            }
+        }).then(async response => {
+            alert("Failed to get the members. Redirecting to login page." + response.status)
+            if (response.status !== 200) {
+                alert("Failed to get the members. Redirecting to login page.");
+                navigate(`/`)
+                return;
+            }
+
+            return await response.json();
+        }).catch(error => {
+            console.log(error);
+            alert("Failed to get the members. Redirecting to login page.");
+            navigate(`/`)
+        })
     }
 
     //state to make sure the guilds are loaded after fetching
