@@ -58,8 +58,8 @@ export const Menu = () => {
         }
     }, [guildState, guilds, navigate])
 
-    const checkIfBotIsInGuild = (guild : Guild) => {
-
+    const checkIfBotIsInGuild = (guild : Guild) : Guild => {
+        return guild
     }
 
 
