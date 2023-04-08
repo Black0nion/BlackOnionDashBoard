@@ -19,12 +19,12 @@ function App() {
     //state variable and function to update the state
     const updateGuild = (guild: Guild) => setGuild(guild);
 
-    //if token exists in cookies, redirect to dashboard
+    //if sessionId exists in cookies, redirect to dashboard
     //if not, redirect to login page
 
-    const token = getCookie("token")
+    const sessionId = getCookie("sessionId")
 
-    if (token === "") {
+    if (sessionId === "") {
         return <Routes>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/onboarding/callback" element={<CallbackPage/>}/>

@@ -24,11 +24,8 @@ export const CallbackPage = () => {
         const code = new URLSearchParams(window.location.search).get('code');
 
         // change of approach: we get the token and save it in the session storage, then we redirect to the menu page
-        fetch("https://discord.com/api/v10" + "/oauth2/token", {
+        fetch("microservice:/auth/exchange_code?code=" + code, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
             body: new URLSearchParams({
                 client_id: configData.client_id,
                 client_secret: configData.client_secret,
@@ -37,18 +34,16 @@ export const CallbackPage = () => {
                 redirect_uri: "http://localhost:3000/onboarding/callback",
             }).toString()
         }).then(async response => {
-            let json = await response.json();
+            let sessionId = await response.text();
             if (response.status !== 200) {
                 alert("Failed to get the session. Redirecting to login page.");
                 window.location.href = "/";
                 return;
             }
 
-            //raw expires_in is 604800 for example, which is 7 days
-            let formatExperiesIn = new Date();
-            formatExperiesIn.setTime(formatExperiesIn.getTime() + (json.expires_in * 1000));
-
-            setCookie("token", json.access_token, {path: "/", expires: formatExperiesIn});
+            
+            //todo : change sent text to include expiry time
+            setCookie("token", sessionId)
 
             window.location.href = "/menu";
         }).catch(error => {
