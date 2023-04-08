@@ -25,12 +25,10 @@ export const Menu = () => {
 
     useEffect(() => {
         if (guildState !== "loaded" || guilds?.size() === 0) {
-            fetch(discordBaseUrl + "/users/@me/guilds", {
+            fetch("/users/@me/guilds", {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + getCookie("token"),
-                    "accept-encoding": "json"
+                    "Authorization": "Bearer " + getCookie("sessionId"),
                 }
             }).then(async response => {
                 if (response.status !== 200) {
@@ -60,6 +58,10 @@ export const Menu = () => {
         }
     }, [guildState, guilds, navigate])
 
+    const checkIfBotIsInGuild = (guild : Guild) => {
+
+    }
+
 
     return (
         <Page>
@@ -72,7 +74,7 @@ export const Menu = () => {
                     return <div>
                         {
                             <div onClick={() => {
-                                handleClick(guild)
+                                handleClick(checkIfBotIsInGuild(guild))
                             }}>
                                 <GuildMenuItem guild={guild}/>
                             </div>
