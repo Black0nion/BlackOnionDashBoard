@@ -28,7 +28,7 @@ export const Menu = () => {
             fetch("/users/@me/guilds", {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + getCookie("sessionId"),
+                    "Authorization": "Bearer " + getCookie("access_token"),
                 }
             }).then(async response => {
                 if (response.status !== 200) {
@@ -59,6 +59,7 @@ export const Menu = () => {
     }, [guildState, guilds, navigate])
 
     const checkIfBotIsInGuild = (guild : Guild) : Guild => {
+        //TODO : If bot is not in guild redirect in a new tabe to invite the bot else return the guild
         return guild
     }
 

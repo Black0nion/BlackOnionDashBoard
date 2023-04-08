@@ -34,7 +34,7 @@ export const CallbackPage = () => {
                 redirect_uri: "http://localhost:3000/onboarding/callback",
             }).toString()
         }).then(async response => {
-            let sessionId = await response.text();
+            let accessToken = await response.text();
             if (response.status !== 200) {
                 alert("Failed to get the session. Redirecting to login page.");
                 window.location.href = "/";
@@ -43,7 +43,7 @@ export const CallbackPage = () => {
 
             
             //todo : change sent text to include expiry time
-            setCookie("token", sessionId)
+            setCookie("access_token", accessToken)
 
             window.location.href = "/menu";
         }).catch(error => {
