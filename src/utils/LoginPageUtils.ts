@@ -2,7 +2,7 @@ import {getAuthLogin} from "./api";
 import {getCookie} from "./Cookies";
 
 export const redirectToDiscord = () => {
-    if (getCookie("token") === null) {
+    if (getCookie("access_token") === null) {
         window.location.href = getAuthLogin();
     } else {
         window.location.href = "/menu";
