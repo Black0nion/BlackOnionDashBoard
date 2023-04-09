@@ -60,6 +60,28 @@ export const Menu = () => {
 
     const checkIfBotIsInGuild = (guild : Guild) : Guild => {
         //TODO : If bot is not in guild redirect in a new tabe to invite the bot else return the guild
+        useEffect(() => {
+        if (guildState !== "loaded" || guilds?.size() === 0) {
+            fetch("/users/@me/guilds", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("access_token"),
+                }
+            }).then(async response => {
+                if (response.status !== 200) {
+                    alert("Failed to check if the bot is in guild. Redirecting to login page.");
+                    navigate(`/`)
+                    return;
+                }
+
+                let json = await response.json();
+            }).catch(error => {
+                console.log(error);
+                alert("Failed to check if bot is in the guild. Redirecting to login page.");
+                navigate(`/`)
+            })
+        }
+    }, [ navigate])
         return guild
     }
 
