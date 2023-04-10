@@ -3,7 +3,7 @@ import {useContext, useEffect, useState} from "react";
 import {GuildContext} from "../utils/context/GuildContext";
 import {GuildMenuItem} from "../components/GuildMenuItem";
 import {Container, Page} from "../utils/styles";
-import {discordBaseUrl, handleGuild} from "../utils/api";
+import {getBotGuilds, getBotInviteUrl, handleGuild} from "../utils/api";
 import {List} from "../utils/List";
 import {Guild} from "../entites/Guild";
 import {getCookie} from "../utils/Cookies";
@@ -58,31 +58,28 @@ export const Menu = () => {
         }
     }, [guildState, guilds, navigate])
 
-    const checkIfBotIsInGuild = (guild : Guild) : Guild => {
-        //TODO : If bot is not in guild redirect in a new tabe to invite the bot else return the guild
-        useEffect(() => {
-        if (guildState !== "loaded" || guilds?.size() === 0) {
-            fetch("/users/@me/guilds", {
-                method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + getCookie("access_token"),
-                }
-            }).then(async response => {
-                if (response.status !== 200) {
-                    alert("Failed to check if the bot is in guild. Redirecting to login page.");
-                    navigate(`/`)
-                    return;
-                }
+    const [hasGuild, setHasGuild] = useState(false)
+    const [checkIfBotIsInGuildState, setCheckIfBotIsInGuildState] = useState("loading")
 
-                let json = await response.json();
-            }).catch(error => {
-                console.log(error);
-                alert("Failed to check if bot is in the guild. Redirecting to login page.");
-                navigate(`/`)
+    const checkIfBotIsInGuild = (clickedGuild : Guild) : Guild | null => {
+        //TODO : If bot is not in guild redirect in a new tabe to invite the bot else return the guild
+        let guilds = getBotGuilds()
+       
+        guilds.then((guilds) => {
+            guilds.forEach((guild) => {
+                if (guild.id === clickedGuild.id) {
+                    setHasGuild(true)
+                }
             })
+            setCheckIfBotIsInGuildState("loaded")
         }
-    }, [ navigate])
-        return guild
+        )
+            
+        if (hasGuild) {
+            return clickedGuild
+        } else {
+            return null
+        }
     }
 
 
@@ -97,7 +94,16 @@ export const Menu = () => {
                     return <div>
                         {
                             <div onClick={() => {
-                                handleClick(checkIfBotIsInGuild(guild))
+                                let checkGuild = checkIfBotIsInGuild(guild)
+                                while (checkIfBotIsInGuildState === "loading") {
+                                    <p>Loading...</p>
+                                }
+
+                                if (checkGuild !== null) {
+                                    handleClick(checkGuild)
+                                } else {
+                                    window.open(getBotInviteUrl(), "_blank", "noopener,noreferrer")
+                                }
                             }}>
                                 <GuildMenuItem guild={guild}/>
                             </div>

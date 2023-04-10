@@ -25,7 +25,7 @@ export class List<T> {
         return this.items.map(callback);
     }
 
-    private forEach(param: (value: any) => void) {
+    forEach(param: (value: any) => void) {
         this.items.forEach(param);
     }
 }
