@@ -1,3 +1,4 @@
+import configData from "../security/config.json";
 import {useNavigate} from "react-router";
 import {useContext, useEffect, useState} from "react";
 import {GuildContext} from "../utils/context/GuildContext";
@@ -20,12 +21,12 @@ export const Menu = () => {
 
     //state to make sure the guilds are loaded after fetching
     const [guilds, setGuilds] = useState<List<Guild>>(new List<Guild>())
-    const [guildState, setGuildState] = useState("loading")
-
+    const [guildState, setGuildState] = useState<String>("waiting")
 
     useEffect(() => {
-        if (guildState !== "loaded" || guilds?.size() === 0) {
-            fetch("/users/@me/guilds", {
+        if (guildState === "waiting") {
+            setGuildState("loading");
+            fetch(configData.bot_api + "/guilds", {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + getCookie("access_token"),
@@ -49,7 +50,7 @@ export const Menu = () => {
 
                 await setGuilds(independentList);
 
-                setGuildState("loaded")
+                setGuildState(independentList?.size() === 0 ? "no guilds" : "loaded");
             }).catch(error => {
                 console.log(error);
                 alert("Failed to get the guilds. Redirecting to login page.");
@@ -57,31 +58,6 @@ export const Menu = () => {
             })
         }
     }, [guildState, guilds, navigate])
-
-    const [hasGuild, setHasGuild] = useState(false)
-    const [checkIfBotIsInGuildState, setCheckIfBotIsInGuildState] = useState("loading")
-
-    const checkIfBotIsInGuild = (clickedGuild : Guild) : Guild | null => {
-        //TODO : If bot is not in guild redirect in a new tabe to invite the bot else return the guild
-        let guilds = getBotGuilds()
-       
-        guilds.then((guilds) => {
-            guilds.forEach((guild) => {
-                if (guild.id === clickedGuild.id) {
-                    setHasGuild(true)
-                }
-            })
-            setCheckIfBotIsInGuildState("loaded")
-        }
-        )
-            
-        if (hasGuild) {
-            return clickedGuild
-        } else {
-            return null
-        }
-    }
-
 
     return (
         <Page>
@@ -94,13 +70,8 @@ export const Menu = () => {
                     return <div>
                         {
                             <div onClick={() => {
-                                let checkGuild = checkIfBotIsInGuild(guild)
-                                while (checkIfBotIsInGuildState === "loading") {
-                                    <p>Loading...</p>
-                                }
-
-                                if (checkGuild !== null) {
-                                    handleClick(checkGuild)
+                                if (guild !== null) {
+                                    handleClick(guild)
                                 } else {
                                     window.open(getBotInviteUrl(), "_blank", "noopener,noreferrer")
                                 }

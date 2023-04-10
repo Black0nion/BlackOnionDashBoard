@@ -17,11 +17,7 @@ export const getAuthLogin = () => {
 
 export function handleGuild(json: any): Guild | null {
     try {
-        if (json.permissions & 0x0000000000000020) {
-            return new GuildImpl(json.id, json)
-        } else {
-            return null
-        }
+        return new GuildImpl(json.id, json)
     } catch (error) {
         alert("error while handling guilds: " + error)
         throw new Error("error while handling guilds: " + error)
@@ -30,7 +26,7 @@ export function handleGuild(json: any): Guild | null {
 
 export async function getBotGuilds() : Promise<List<Guild>> {
     try {
-        await fetch("bot:api/guilds", {
+        await fetch(configData.bot_api + "/guilds", {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + getCookie("access_token"),

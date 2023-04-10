@@ -24,15 +24,8 @@ export const CallbackPage = () => {
         const code = new URLSearchParams(window.location.search).get('code');
 
         // change of approach: we get the token and save it in the session storage, then we redirect to the menu page
-        fetch("microservice:/auth/exchange_code?code=" + code, {
-            method: "POST",
-            body: new URLSearchParams({
-                client_id: configData.client_id,
-                client_secret: configData.client_secret,
-                grant_type: "authorization_code",
-                code: code as string,
-                redirect_uri: "http://localhost:3000/onboarding/callback",
-            }).toString()
+        fetch(configData.bot_api + "/login?code=" + code, {
+            method: "POST"
         }).then(async response => {
             let accessToken = await response.text();
             if (response.status !== 200) {
@@ -41,7 +34,6 @@ export const CallbackPage = () => {
                 return;
             }
 
-            
             //todo : change sent text to include expiry time
             setCookie("access_token", accessToken)
 
