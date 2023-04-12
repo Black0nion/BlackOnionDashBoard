@@ -31,9 +31,8 @@ To run the app you need to create a config.json file in the src/security folder 
 ```json
 {
   "client_id": "",
-  "client_secret": "",
-  "redirect_url": "",
-  "auth_api_url": "",
+    "redirect_url": "",
+    "bot_api": "",
   "bot_invite_url": ""
 }
 ```
