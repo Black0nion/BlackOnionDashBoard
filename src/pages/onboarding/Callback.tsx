@@ -34,8 +34,13 @@ export const CallbackPage = () => {
                 return;
             }
 
-            //todo : change sent text to include expiry time
-            setCookie("access_token", accessToken)
+            //base64 decode the 2nd out of 3 parts of the token the backend provides you and get the exp json field of it to check at which unix epoch timestamp it expires.
+            const decodedToken = atob(accessToken.split(".")[1]);
+            const decodedTokenJson = JSON.parse(decodedToken);
+            const expiryTime = decodedTokenJson.exp;
+            const formattedExpiryTime = new Date(expiryTime * 1000);
+
+            setCookie("access_token", accessToken, {path: "/", expires: formattedExpiryTime});
 
             window.location.href = "/menu";
         }).catch(error => {

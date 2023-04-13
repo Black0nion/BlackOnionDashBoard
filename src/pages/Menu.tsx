@@ -4,7 +4,7 @@ import {useContext, useEffect, useState} from "react";
 import {GuildContext} from "../utils/context/GuildContext";
 import {GuildMenuItem} from "../components/GuildMenuItem";
 import {Container, Page} from "../utils/styles";
-import {getBotGuilds, getBotInviteUrl, handleGuild} from "../utils/api";
+import {getBotInviteUrl, handleGuild} from "../utils/api";
 import {List} from "../utils/List";
 import {Guild} from "../entites/Guild";
 import {getCookie} from "../utils/Cookies";
