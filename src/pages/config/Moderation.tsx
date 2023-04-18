@@ -1,33 +1,33 @@
-import {Button, Container, CustomSelect, Flex, Page, PageTitle} from "../../utils/styles";
+import {Container, Page, PageTitle} from "../../utils/styles";
+import {useContext, useEffect, useState} from "react";
+import {GuildContext} from "../../utils/context/GuildContext";
+import {fetchSettings} from "../../utils/db";
+import {DropdownSetting} from "../../components/Setting";
 
 export const Moderation = () => {
-    return <Page>
-        <PageTitle>Moderation Config</PageTitle>
+  const { guild } = useContext(GuildContext);
+  const guildId = (guild && guild.id) || "";
+  const [currentLoadingStatus, setCurrentLoadingStatus] = useState("waiting");
 
-        <Container>
-            <h1>Enable/Disable Anti-Spoiler</h1>
-            <section>
-                <div>
-                    <label>Current status:</label>
-                </div>
-                <CustomSelect>
-                    <select id={"anti-spoiler"}>
-                        <option disabled selected>Choose a status</option>
-                        <option>Enabled</option>
-                        <option>Disabled</option>
-                    </select>
-                </CustomSelect>
-            </section>
+  useEffect(() => {
+    if (currentLoadingStatus === "waiting") {
+      setCurrentLoadingStatus("loading");
+      fetchSettings(guildId).then((res) => {
+        setCurrentLoadingStatus("loaded");
+      });
+    }
+  }, [currentLoadingStatus, guildId]);
 
-            {/*<AddWhiteLine/>*/}
-            <Flex justifyContent={"flex-end"}>
-                <Button variant={"secondary"} style={{marginRight: "0.625em"}}>
-                    Reset
-                </Button>
-                <Button variant={"primary"}>
-                    Save
-                </Button>
-            </Flex>
-        </Container>
+  return (
+    <Page>
+      <PageTitle>Moderation Config</PageTitle>
+
+      <Container>
+        {currentLoadingStatus === "loading" && <p>Loading...</p>}
+        {currentLoadingStatus === "loaded" &&
+          <DropdownSetting id="anti_spoiler" options={["Test", "Hello", "World"]}/>
+        }
+      </Container>
     </Page>
-}
+  );
+};
